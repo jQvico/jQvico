@@ -1,0 +1,22 @@
+body, html{
+    font-size:14px;
+    font-family: Arial;
+}
+.top{
+    font-size: 0.8em;
+    color:#fff;
+    background-color: #999;
+    padding: 10px;
+    text-align: center;
+}
+.home{
+    text-align: center;
+}
+.home input{
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 1.2em;
+}
+.home h1{
+    font-weight: normal;
+}
