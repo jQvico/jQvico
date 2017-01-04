@@ -1,8 +1,10 @@
 var Config = {
-    
+
     // Set true for developer version
     dev: true,
-    
+
+    restUrl: 'http://jqvico.com/rest/',
+
     // Define here all javaScript files which going to be included in the project
     scripts: [
         'libs/mustache.min.js',
@@ -14,12 +16,12 @@ var Config = {
         'app/controllers/controllers.js',
         'app/models/model.js'
     ],
-    
+
     // Define here all CSS files which going to be included in the project
     styles: [
         'files/css/styles.css'
     ],
-    
+
     // Set version of files in version variable
     // Do not remove this function. It's responsible for refreshing static files.
     deployVer: function () {
@@ -29,5 +31,5 @@ var Config = {
         }
         return version;
     }
-    
+
 };
