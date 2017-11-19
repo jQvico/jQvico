@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Examples jQvico</title>
+        <meta name="description" content="...">
+        <meta name="keywords" content="...">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+        <link rel="shortcut icon" href="" sizes="16x16" type="image/png">
+        <link href="css/style.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="css/paraiso-light.css">
+        <script src="js/jquery-3.1.1.min.js"></script>
+        <script src="js/script.js"></script>
+        <script src="js/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+    </head>
+    <body>
+        <div id="site">
+
+            <header class="examples">
+              <nav></nav>
+            </header>
+
+            <main>
+              <article class="container examples">
+
+<h1>Examples</h1>
+<a href="https://github.com/jQvico/jQvico">Download</a> code from github.
+
+<h2>Example 1: Hello world</h2>
+<figure>
+    <img src="img/example_hello.png" alt="jqvico example">
+</figure>
+<strong>Router</strong> (app/config/router.js)
+<pre><code class="javascript">
+  class Router{
+
+      constructor(){
+          this.classController = new Controllers();
+      }
+
+      getRouter(){
+          return [
+              // default controller
+              {'': [
+                  {method: 'headerController', class: this.classController},
+                  {method: 'homeController', class: this.classController}
+              ]}
+          ];
+      }
+  }
+</code></pre>
+<br>
+<strong>Controller</strong> (app/controllers/controllers.js)
+<pre><code class="javascript">
+  class Controllers extends Controller{
+
+      constructor(){
+          super();
+      }
+
+
+      // header, menu - start page
+      headerController(type){
+
+          this.view.render('header.html', $('header'), {type: type});
+      }
+
+      // home page
+      homeController(){
+
+          var data = {message: 'Hello'};
+
+          var callback = function(){
+          };
+
+          this.view.render('home.html', $('main'), data, callback);
+      }
+
+  };
+</code></pre>
+<br>
+<strong>View</strong> (app/views/header.html, app/views/home.html)
+<pre><code class="html">
+  &lt;!-- header.html --&gt;
+  &lt;div class="top"&gt;
+      jQvico framework
+  &lt;/div&gt;
+
+  &lt;!-- home.html --&gt;
+  &lt;section class="home"&gt;
+      &lt;h1&gt;{{ message }} &lt;strong data-var-map="myName"&gt;&lt;/strong&gt;&lt;/h1&gt;
+      &lt;input name="me" value="" data-var="myName"&gt;
+  &lt;/section&gt;
+</code></pre>
+<br>
+<strong>CSS</strong> (files/css/styles.css)
+<pre><code class="css">
+body, html{
+    font-size:14px;
+    font-family: Arial;
+}
+.top{
+    font-size: 0.8em;
+    color:#fff;
+    background-color: #999;
+    padding: 10px;
+    text-align: center;
+}
+.home{
+    text-align: center;
+}
+.home input{
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 1.2em;
+}
+.home h1{
+    font-weight: normal;
+}
+</code></pre>
+
+<br>
+<h2>Example 2: Send form by AJAX</h2>
+<figure>
+    <img src="img/example_form.png" alt="jqvico example">
+</figure>
+<strong>Router</strong> (app/config/router.js)
+<pre><code class="javascript">
+  class Router{
+
+      constructor(){
+          this.classController = new Controllers();
+      }
+
+      getRouter(){
+          return [
+              // default controller
+              {'': [
+                  {method: 'welcomeController', class: this.classController}
+              ]},
+              {contact: [
+                  {method: 'contactController', class: this.classController}
+              ]}
+          ];
+      }
+  }
+</code></pre>
+<br>
+<strong>Config</strong> (app/config/config.js)
+<pre><code class="javascript">
+  var Config = {
+
+      // Set true for developer version
+      dev: true,
+
+      restUrl: 'http://jqvico.com/rest/',
+
+      // Define here all javaScript files which going to be included in the project
+      scripts: [
+          'libs/mustache.min.js',
+          'app/system/global.js',
+          'app/config/router.js',
+          'app/system/core.js',
+          'app/system/view.js',
+          'app/system/controller.js',
+          'app/controllers/controllers.js',
+          'app/models/model.js'
+      ],
+
+      // Define here all CSS files which going to be included in the project
+      styles: [
+          'files/css/styles.css'
+      ],
+
+      // Set version of files in version variable
+      // Do not remove this function. It's responsible for refreshing static files.
+      deployVer: function () {
+          var version = null; // ie: 1, 2, 3 ...
+          if (this.dev === true) {
+              version = Math.random();
+          }
+          return version;
+      }
+
+  };
+</code></pre>
+<br>
+<strong>Controller</strong> (app/controllers/controllers.js)
+<pre><code class="javascript">
+  class Controllers extends Controller{
+
+      constructor(){
+          super();
+      }
+
+
+      // home page
+      welcomeController(type){
+
+          this.view.render('welcome.html', $('main'));
+      }
+
+      // contact form
+      contactController(){
+
+          var data = { form: {
+                          name: 'First Name',
+                          message: 'Your Message',
+                          button: 'Send'}};
+
+          var callback = () => {
+              this.sendForm();
+          };
+
+          this.view.render('contact.html', $('main'), data, callback);
+      }
+
+      // send form after click on the button
+      sendForm(){
+
+        $('button').click(function(){
+
+            let name = $('input[name="firstName"]').val();
+            let message = $('textarea').val();
+
+            if(name && message) {
+
+                var promise = new Model().sendAjax(name, message);
+
+                promise.then(function(response) {
+                    $('section.contact-form').html(`&lt;h2&gt;${response.message}&lt;/h2&gt;`);
+                }, function(error) {
+                    console.error("Failed!", error);
+                });
+
+            }
+        });
+
+      }
+
+  }
+</code></pre>
+<br>
+<strong>Model</strong> (app/models/model.js)
+<pre><code class="javascript">
+  class Model {
+
+    // send data by AJAX
+    sendAjax(formName, formMessage){
+
+        return new Promise(function(resolve, reject) {
+
+            $.ajax({
+                type: 'POST',
+                url: Config.restUrl + 'message.php',
+                data: {
+                  name: formName,
+                  message: formMessage
+                }
+            }).done( (ret) => {
+
+                if (ret.status == 'ok') {
+                    resolve(ret);
+                }
+                else {
+                    reject(`Error: ${ret.status}`);
+                }
+
+            });
+        });
+    }
+
+  }
+</code></pre>
+<br>
+<br>
+<strong>View</strong> (app/views/welcome.html, app/views/contact.html)
+<pre><code class="html">
+  &lt;!-- welcome.html --&gt;;
+  &lt;section class="welcome"&gt;
+      &lt;h1&gt;Example 2: &lt;a href="#contact"&gt;Contact form&lt;/a&gt;&lt;/h1&gt;
+  &lt;/section&gt;
+
+  &lt;!-- contact.html --&gt;;
+  &lt;section class="contact-form"&gt;
+      &lt;h1&gt;Contact form&lt;/h1&gt;
+      &lt;div&gt;
+          &lt;label&gt;{{ form.name }}&lt;/label&gt;
+          &lt;input name="firstName"&gt;
+      &lt;/div&gt;
+      &lt;div&gt;
+          &lt;label&gt;{{ form.message }}&lt;/label&gt;
+          &lt;textarea rows="3"&gt;&lt;/textarea&gt;
+      &lt;/div&gt;
+      &lt;div&gt;
+          &lt;button&gt;{{ form.button }}&lt;/button&gt;
+      &lt;/div&gt;
+  &lt;/section&gt;
+</code></pre>
+<br>
+<strong>CSS</strong> (files/css/styles.css)
+<pre><code class="css">
+  body, html{
+      font-size:14px;
+      font-family: Arial;
+  }
+  div{
+    padding: 5px;
+  }
+  label{
+    display:block;
+  }
+  input{
+    width:200px;
+  }
+  textarea{
+    width:200px;
+  }
+</code></pre>
+
+              </article>
+            </main>
+
+            <footer></footer>
+
+        </div>
+
+        <script>
+          $(function(){
+              new Main().loadMenuFooter('examples');
+          });
+        </script>
+
+    </body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ECMAScript6</title>
+        <meta name="description" content="...">
+        <meta name="keywords" content="...">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+        <link rel="shortcut icon" href="" sizes="16x16" type="image/png">
+        <link href="css/style.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="css/paraiso-light.css">
+        <script src="js/jquery-3.1.1.min.js"></script>
+        <script src="js/script.js"></script>
+        <script src="js/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+    </head>
+    <body>
+        <div id="site">
+
+            <header class="js">
+              <nav></nav>
+            </header>
+
+            <main>
+              <article class="container">
+
+<h1>New feuteres in JavaScript (ECMAScript 6)</h1>
+The following are some new enhancements of Java Script which are implemented in top web browsers.
+
+<h2>Class</h2>
+You can use <em>class</em> statement with the constructor method and the possibility of inheritance.
+<pre><code class="javascript">
+    class boo extends foo{
+        constructor(){
+            this.a = 5;
+        }
+    }
+</code></pre>
+<h2>Arrow functions</h2>
+Functions with short syntax which resolve the problem of calling <em>this</em> statement inner them.
+<pre><code class="javascript">
+    class foo{
+        boo(){
+            this.x = 1;
+            $("a").click( () => { console.log(this.x) }) // 1
+        }
+    }
+</code></pre>
+
+<h2>String templates</h2>
+Pass and read a variable in the string.
+<pre><code class="javascript">
+    var x = 5;
+    var str = `Count: ${x} * ${x} = ${x*x}`;
+    console.log(str) // Count: 5 * 5 = 25
+</code></pre>
+
+<h2>Spread Operator</h2>
+Spreading of an iterable element on single elements.
+<pre><code class="javascript">
+    var x = [ 1, "c", false];
+    var y = [ "a", "b", ...x ];
+    console.log(y) //["a", "b", 1, "c", false]
+</code></pre>
+
+
+<h2>Rest Parameter</h2>
+Aggregate parameters into array.
+<pre><code class="javascript">
+    function foo (x, y, ...z) {
+        console.log(z);
+    }
+    foo("a", "b", 1, "c", false) //  [1, "c", false]
+</code></pre>
+
+<h2>Variable types: let, const</h2>
+let - scope within closest <em>{}</em> braces.<br>
+const - constant, not modifiable in the code, except object properties and array elements.
+<pre><code class="javascript">
+    var i = 0;
+    const x = 5;
+    const y = {a: 1};
+    for (let i = 1; i < 5; i++ ){
+      console.log(i); // 1, 2, 3, 4
+    }
+    y.a = 4;
+    console.log(i); // 0
+    console.log(y); //  Object { a=4 }
+    x = 10; // error
+</code></pre>
+<h2>Function default parameaters</h2>
+Pass default parameters into the function.
+<pre><code class="javascript">
+    function foo(x=1, y=2){
+        console.log(x, y);
+    }
+    foo(5); // 5 2
+</code></pre>
+<h2><em>for of</em> steatment</h2>
+The statement looping over values of iterable objects.
+<pre><code class="javascript">
+  var x = [1, 2, 3];
+  for (let v of x) {
+    console.log(v); //1, 2, 3
+  }
+</code></pre>
+<h2>Promises</h2>
+Helpful in asynchronous calls. You can define what to do after execution of request in case of success and failure.
+<pre><code class="javascript">
+  new Promise(function(resolve, reject) {
+    setTimeout(function() { resolve('ok'); }, 1000);
+  })
+  .then(function(result) {
+    console.log(result);  // 'ok'
+  });
+</code></pre>
+<h2>Generators</h2>
+Generators are special functions allow control flow by using keyword <em>yield</em>.
+<pre><code class="javascript">
+  function* gen() {
+    yield 1;
+    yield 2;
+    yield 3;
+  }
+
+  var g = gen();
+  console.log(g.next().value);  // 1
+  console.log(g.next().value);  // 2
+</code></pre>
+
+<h2>Map/Set</h2>
+Methods lets you store values.
+<pre><code class="javascript">
+  let s = new Set()
+  s.add("Apple").add(3);
+  s.has(3)
+
+  let input = [0, 1, 2];
+  let add = input.map((x)=>{return x + 1});
+  console.log(add)  // 1, 2, 3
+</code></pre>
+<h2>New Methods</h2>
+<pre><code class="javascript">
+  // Searching strings
+  "javascript".includes("sc")  // true
+  "javascript".startsWith("ava", 1)  // true
+
+  // Truncate a floating point number.
+  console.log(Math.trunc(10.8)) // 10
+
+  // Assigning new properties to the object.
+  var main  = { a: 0 }
+  var ext = { b: 1, c: 'z' }
+
+  Object.assign(main, ext);
+  console.log(main) //  Object { a=0,  b=1,  c="z"}
+
+  // Finding an element in the array.
+  [ 1, 2, 'a', 'b' ].find(x => x == 'a') // a
+
+  // Number type checking
+  Number.isNaN(NaN) === true        // true
+  Number.isFinite(NaN) === false    // true
+
+  // String repeating
+  "js-".repeat(3) // "js-js-js-"
+</code></pre>
+
+
+              </article>
+            </main>
+
+            <footer></footer>
+
+        </div>
+
+        <script>
+          $(function(){
+              new Main().loadMenuFooter('js');
+          });
+        </script>
+
+    </body>
+</html>

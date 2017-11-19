@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Documentation</title>
+        <meta name="description" content="jQvico JavaScript Framework Documentation">
+        <meta name="keywords" content="jQvico, JavaScript, Framework, Documentation">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+        <link rel="shortcut icon" href="" sizes="16x16" type="image/png">
+        <link href="css/style.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="css/paraiso-light.css">
+        <script src="js/jquery-3.1.1.min.js"></script>
+        <script src="js/script.js"></script>
+        <script src="js/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+    </head>
+    <body>
+        <div id="site">
+
+            <header class="documentation">
+              <nav></nav>
+            </header>
+
+            <main>
+              <article class="container">
+
+<h1>Documentation</h1>
+The below you get more information about usage of jQuvico framework.<br>
+For more practical advices please visit <a href="examples.html">Examples</a> section and review the source code of some project.
+
+<h2>Config</h2>
+<em>Config</em> object is available in whole framework, so you can define here important variables.
+<pre><code class="javascript">
+    // Set true for developer version
+    dev: true,
+
+    // Define here all javaScript files which going to be included in the project
+    scripts: []
+
+    // Define here all CSS files which going to be included in the project
+    styles: []
+
+    // Set version of files in version variable
+    // Do not remove this function. It's responsible for refreshing static files.
+    deployVer: function () {
+      var version = 19;
+      ...
+    }
+</code></pre>
+
+<h2>Router</h2>
+In the <em>Router</em> class you can define all actions of your application.
+Firstly in the constructor assign used classes.
+<pre><code class="javascript">
+  constructor(){
+      this.classController = new Controllers();
+      this.classMyController = new MyControllers();
+  }
+</code></pre>
+Next in the <em>getRouter()</em> function set up function and class for given URI.
+In the following example for http://myapp#cars are executed two functions: <em>headerController</em> from <em>Controllers</em> class and <em>carController</em> from <em>MyControllers</em> class.
+<pre><code class="javascript">
+  {cars: [
+      {method: 'headerController,cars', class: this.classController},
+      {method: 'carController', class: this.classMyController}
+  ]} ,
+</code></pre>
+In order to pass to the function parameters put them after comma and separated by slash.
+<pre><code class="javascript">
+  headerController,cars/1/a ( is equivalent to ) headerController([cars, 1, a])
+</code></pre>
+
+<h2>Controller</h2>
+Basically <em>Controllers</em> would be the main part of your application.<br>
+Here you should put functions responsible for each action from the router.
+<pre><code class="javascript">
+  carController(){
+
+      // load additional js files
+      new Init().loadScript(['files/js/cars.js', 'files/js/i18n.js']);
+
+      // variables passed to the view
+      var data = {i18n: i18n[Config.lang], button: 'Send'};
+
+      // callback function executed after loading the view
+      var callback = () => {
+        $('button').click(function(){
+          console.log('clicked');
+        });
+      };
+
+      // render the view
+      this.view.render('car.html', $('main'), data, callback);
+  }
+</code></pre>
+
+<em>this.view</em> object is available in all controllers.<br>
+<em>this.view.render('view.html', $(body))</em> method insert <em>view.html</em> into <em>body</em> section in the <em>index.html</em> template.<br>
+<em>data</em> and <em>callback</em> are optional.
+
+<h2>View</h2>
+Views are created in html and saved as html files.<br>
+You can use inside them <a href="https://github.com/janl/mustache.js/" target="_blank">mustache</a> template engine which is included to the jQvico by default.
+<pre><code class="html">
+  &lt;article&gt;
+    &lt;nav&gt;
+      &lt;ul&gt;
+          &lt;li&gt;&lt;a class="flights" href="#" data-router="true"&gt;{{ i18n.common.menuFlights }}&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a class="hotels" href="#hotels" data-router="true"&gt;{{ i18n.common.menuHotels }}&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a class="cars active" href="#cars" data-router="true"&gt;{{ i18n.common.menuCars }}&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/nav&gt;
+    &lt;button type="sybmit"&gt;{{ button }}&lt;/button&gt;
+  &lt;/article&gt;
+</code></pre>
+
+<h2>Model</h2>
+Model is a standard class in which you can define source of data, like object or array.<br>
+The model can be treated also as a service feeds data through AJAX.
+<pre><code class="javascript">
+  class Model {
+
+      // get content by Ajax
+      termsAjax(){
+
+          return new Promise(function(resolve, reject) {
+
+              $.ajax({
+                  type: 'GET',
+                  url: Config.restUrl + 'rest/info/terms'
+              }).done( (ret) => {
+
+                  if (ret.status == 'ok') {
+                      resolve(ret);
+                  }
+                  else {
+                      reject(`Error: ${ret.status}`);
+                  }
+
+              });
+          });
+      }
+  }
+</code></pre>
+
+              </article>
+            </main>
+
+            <footer></footer>
+
+        </div>
+
+        <script>
+          $(function(){
+              new Main().loadMenuFooter('documentation');
+          });
+        </script>
+
+    </body>
+</html>

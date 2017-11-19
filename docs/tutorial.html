@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ECMAScript6</title>
+        <meta name="description" content="...">
+        <meta name="keywords" content="...">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+        <link rel="shortcut icon" href="" sizes="16x16" type="image/png">
+        <link href="css/style.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="css/paraiso-light.css">
+        <script src="js/jquery-3.1.1.min.js"></script>
+        <script src="js/script.js"></script>
+        <script src="js/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+    </head>
+    <body>
+        <div id="site">
+
+            <header class="tutorial">
+              <nav></nav>
+            </header>
+
+            <main>
+              <article class="container">
+
+<h1>Tutorial</h1>
+This is a quick tutorial, how to start work with jQvico.<br>
+For more complex solution go over to the <a href="documentation.html">Documentation</a> section.
+
+<h2>Install</h2>
+Clone or download project from github.
+<pre><code>
+git clone https://github.com/jQvico/jQvico.git
+</code></pre>
+
+jQvico is also available as npm and bower package.
+<pre><code>
+    npm install jqvico
+    bower install jqvico
+</code></pre>
+
+<h2>Router</h2>
+Set up routing in <em>app/config/router.js</em> file. <br>
+For example for url <em>http://localhost/myapp/#contact</em> <br>
+Router can be the following:<br>
+<pre><code class="javascript">
+    class Router{
+
+        constructor(){
+            this.classController = new Controllers();
+        }
+
+        getRouter(){
+            return [
+                //  contact form page
+                {contact: [
+                    {method: 'formController', class: this.classController},
+                ]}
+            ];
+        }
+    }
+
+</code></pre>
+
+<h2>Controller</h2>
+Create function <em>formController()</em> in <em>app/controllers/controllers.js</em> file.
+<pre><code class="javascript">
+    class Controllers extends Controller{
+
+        constructor(){
+            super();
+        }
+
+        formController(){
+
+            var data = {
+                nameLabel: 'First name',
+                textLabel: 'Message',
+                sendLabel: 'Send message'
+            };
+
+            var callback = () => {
+            };
+
+            this.view.render('contact.html', $('main'), data, callback);
+        }
+    }
+</code></pre>
+
+<h2>View</h2>
+Create file <em>contact.html</em> which will be injected to section <em>main</em> in <em>index.html</em> template.
+<pre><code class="html">
+    &lt;form&gt;
+        &lt;label&gt;{{ data.nameLabel }}&lt;/label&gt;
+        &lt;input name="firstName" type="text"&gt;
+        &lt;label&gt;{{ data.textLabel }}&lt;/label&gt;
+        &lt;textarea name="message"&gt;&lt;/textarea&gt;
+        &lt;button type="submit"&gt;{{ data.sendLabel }}&lt;/button&gt;
+    &lt;/form&gt;
+</code></pre>
+
+              </article>
+            </main>
+
+            <footer></footer>
+
+        </div>
+
+        <script>
+          $(function(){
+              new Main().loadMenuFooter('tutorial');
+          });
+        </script>
+
+    </body>
+</html>
